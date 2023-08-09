@@ -3,12 +3,13 @@ from dependecies import *
 class captureWindow():
     
 
-    def __init__(self,root,dirEvidence,filename,testDescription):
+    def __init__(self,root,evidence,dirEvidence,filename,testDescription):
+      self.evidence = evidence
       self.dirEvidence = dirEvidence.get()
       self.filename = filename.get()
       self.testDescription = testDescription.get()
       self.secondary_window = tk.Toplevel(root)
-      setWindow(self.secondary_window,"Capture",360,70)
+      setWindow(self.secondary_window,"Capture",360,70,"BOTTOM-LEFT")
       root.iconify()
       self.captureWindowFrame= tk.Frame(self.secondary_window,padx=10,pady=5)
       self.captureWindowFrame.grid(column=0,row=1)
@@ -38,17 +39,24 @@ class captureWindow():
       )
       self.buttonCapture.grid(column=2,row=0,padx=5)
 
+      self.buttonCancel= ttk.Button(
+        self.frame,
+        cursor="hand2",
+        text="Cancel",
+        command=lambda:self.evidence.closeDocument()
+      )
+      self.buttonCapture.grid(column=2,row=0,padx=5)
     def toString(self):
        print("dir: "+ self.dirEvidence)
        print("file: "+self.filename)
        print("descript: "+self.testDescription)
 
 
-    def addStep(self,evidence,description,steps):
-      #evidence.addPicture("Step # "+steps+": "+description)
-      description.set(" ") 
-      current = int(steps.get())
+    def addStep(self):
+      self.evidence.addPicture("Step # "+self.steps+": "+self.descriptionText.get())
+      self.descriptionText.set(" ") 
+      current = int(self.steps.get())
       new_step = current + 1
-      steps.set(str(new_step))
+      self.steps.set(str(new_step))
 
 

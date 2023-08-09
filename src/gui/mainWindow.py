@@ -6,7 +6,7 @@ class mainWindow():
 
   def __init__(self,root):
     self.root = root
-    setWindow(self.root,"Fast Evidence",400,200)
+    setWindow(self.root,"Fast Evidence",400,200,"CENTER")
 
     self.mainFrame = ttk.Frame(root)
     self.mainFrame.columnconfigure(0, weight=1,pad=10)
@@ -69,9 +69,7 @@ class mainWindow():
     self.setTestExecutionData()
     testData = self.getMetadata()
     evidence = Evidence(self.dirPathText.get(),self.replacementText.get(),testData,self.descriptionText.get())
-    evidence.createDocument()
-    evidence.closeDocument()
-    cap = captureWindow(self.root,self.dirPathText,self.replacementText,self.descriptionText) 
+    cap = captureWindow(self.root,evidence,self.dirPathText,self.replacementText,self.descriptionText) 
 
 
   def setTestExecutionData(self):

@@ -5,7 +5,7 @@ class testDataWindow():
 
     def __init__(self,root):
       self.secondary_window = tk.Toplevel(root)
-      setWindow(self.secondary_window,"Test Cycle Information",300,235)
+      setWindow(self.secondary_window,"Test Cycle Information",300,235,"CENTER")
       self.secondary_window.grab_set()
 
       self.settingsContainerFrame= tk.Frame(self.secondary_window,padx=10,pady=5)
