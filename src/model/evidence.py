@@ -123,7 +123,7 @@ class Evidence:
 
     def addStepDescription(self,description):
       paragraph = self.doc.add_paragraph()
-      run = paragraph.add_run("Step - "+str(self.pictures_num)+" : "+description)
+      run = paragraph.add_run(str(self.pictures_num)+" : "+description)
       run.bold = True
       run.font.size = Pt(12)
 

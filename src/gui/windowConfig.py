@@ -16,7 +16,7 @@ def setWindow(root,title,width,height,position):
   # set the position of the window to the center of the screen
     root.geometry(f'{width}x{height}+{center_x}+{center_y}')
   else:
-    root.geometry(f'{width}x{height}+{screen_width-width}+{screen_height-(height+90)}') 
+    root.geometry(f'{width}x{height}+{screen_width-(width+30)}+{screen_height-(height+90)}') 
   
   root.resizable(False,False)
   root.columnconfigure(0, weight=4)

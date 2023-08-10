@@ -6,6 +6,8 @@ class mainWindow():
 
   def __init__(self,root):
     self.root = root
+    self.evidence = ""
+    self.weStart = False
     setWindow(self.root,"Fast Evidence",400,200,"CENTER")
 
     self.mainFrame = ttk.Frame(root)
@@ -18,7 +20,7 @@ class mainWindow():
 
 
     #Path Entry
-    ttk.Label(self.mainFrame, text='Path:',anchor='w').grid(column=0, row=0,sticky='w')
+    ttk.Label(self.mainFrame, text='* Directory:',anchor='w').grid(column=0, row=0,sticky='w')
     self.dirPathText= tk.StringVar()
     self.dirPath= ttk.Entry(self.mainFrame, width=30,textvariable=self.dirPathText)
     self.dirPath.focus()
@@ -27,7 +29,7 @@ class mainWindow():
     self.fileExploreButton.grid(column=2,row=0)
 
     #FilenameEntry
-    ttk.Label(self.mainFrame, text='Filename:',anchor='w').grid(column=0, row=1,sticky='w') 
+    ttk.Label(self.mainFrame, text='* Filename:',anchor='w').grid(column=0, row=1,sticky='w') 
     self.replacementText= tk.StringVar()
     self.replacement = ttk.Entry(self.mainFrame, width=30,textvariable=self.replacementText)
     self.replacement.grid(column=1, row=1)
@@ -45,11 +47,11 @@ class mainWindow():
     self.buttonFrame = ttk.Frame(root)
     self.buttonFrame.columnconfigure(0, weight=1)
 
-    ttk.Button(self.buttonFrame, text='Start',command=lambda:self.startCaptureProcess(),cursor="hand2").grid(column=0, row=0)
-    ttk.Button(self.buttonFrame, text='Stop',cursor="hand2").grid(column=0, row=1)
-    ttk.Button(self.buttonFrame, text='Cancel',).grid(column=0, row=2)
-    ttk.Button(self.buttonFrame, text='Test Data',command=lambda:self.openTestDataWindow() ,cursor="hand2").grid(column=0, row=3)
-
+    self.buttonStart = ttk.Button(self.buttonFrame, text='Start',command=lambda:self.startCaptureProcess(),cursor="hand2").grid(column=0, row=0)
+    self.buttonTestData = ttk.Button(self.buttonFrame, text='Test Data',command=lambda:self.openTestDataWindow() ,cursor="hand2").grid(column=0, row=1)
+    self.buttonOpenDirStyle = ttk.Style()
+    self.buttonOpenDir = ttk.Button(self.buttonFrame, text='Open Dir',cursor="hand2",command=lambda:self.openWorkingDirectory()).grid(column=0, row=2)
+    self.buttonGenerate = ttk.Button(self.buttonFrame, text='Generate',cursor="hand2",command=lambda:self.generateEvidence()).grid(column=0, row=3)
 
     for widget in self.buttonFrame.winfo_children():
       widget.grid(padx=3, pady=3)
@@ -66,11 +68,15 @@ class mainWindow():
 
 
   def startCaptureProcess(self):
-    self.setTestExecutionData()
-    testData = self.getMetadata()
-    evidence = Evidence(self.dirPathText.get(),self.replacementText.get(),testData,self.descriptionText.get())
-    cap = captureWindow(self.root,evidence,self.dirPathText,self.replacementText,self.descriptionText) 
-
+    if self.validInputData():
+      self.setTestExecutionData()
+      testData = self.getMetadata()
+      self.evidence = Evidence(self.dirPathText.get(),self.replacementText.get(),testData,self.descriptionText.get())
+      cap = captureWindow(self.root,self.evidence,self.dirPathText,self.replacementText,self.descriptionText) 
+      if cap != None:
+        self.weStart = True
+    else:
+      boxmessage.showerror("Input Data","The filename or Directory is not valid to store the evidence")
 
   def setTestExecutionData(self):
     status = self.setStatusTest()
@@ -85,9 +91,15 @@ class mainWindow():
       config = {}
       boxmessage.showerror(e)
     filename = self.replacementText.get()
-    filename_Status = "["+status+"] "+filename
-    self.replacementText.set(filename_Status)
+    # filename_Status = "["+status+"] "+filename
+    self.replacementText.set(filename)
 
+  def validInputData(self):
+    if not self.dirPathText.get().isspace() and self.dirPathText.get() != '' :
+      if os.path.exists(self.dirPath.get()):
+        if not self.replacementText.get().isspace() and self.replacementText.get() != '':
+          return True
+    return False
 
   def getMetadata(self):
     metadata = []
@@ -108,3 +120,17 @@ class mainWindow():
       return "PASSED" 
     else:
       return "FAILED"
+    
+  def generateEvidence(self):
+    if self.weStart:
+      result = messagebox.askquestion("Generate Doc","¿You are sure to generate the document?")
+      if result == "yes":
+        self.evidence.closeDocument()
+        messagebox.showinfo("Generate Doc","Document as been created successfuylly")
+        self.openWorkingDirectory()
+    else:
+      boxmessage.showerror("We don´t start","First you must click Start button to capture the evidences")
+
+
+  def openWorkingDirectory(self):
+    subprocess.run(["explorer",os.path.realpath(self.dirPathText.get())])
