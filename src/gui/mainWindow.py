@@ -8,7 +8,25 @@ class mainWindow():
     self.root = root
     self.evidence = ""
     self.weStart = False
+    self.weEnd = False
     setWindow(self.root,"Fast Evidence",400,200,"CENTER")
+    
+    self.menuBar= Menu(self.root)
+    self.file = Menu(self.menuBar,tearoff = 0)
+    self.menuBar.add_cascade(label ='File', menu = self.file)
+    self.file.add_command(label ='New Evidence', command = None)
+    self.file.add_command(label ='Save', command = None)
+    self.file.add_separator()
+    self.file.add_command(label ='Exit', command = root.destroy)
+    self.file.config(cursor="hand2")
+
+    self.settings = Menu(self.menuBar,tearoff=0)
+    self.menuBar.add_cascade(label="Settings",menu=self.settings)
+    self.settings.add_command(label ='Test Data', command =lambda:self.openTestDataWindow())
+    self.settings.add_command(label ='Language', command = None)
+
+    self.root.config(menu = self.menuBar)
+    
 
     self.mainFrame = ttk.Frame(root)
     self.mainFrame.columnconfigure(0, weight=1,pad=10)
@@ -69,12 +87,14 @@ class mainWindow():
 
   def startCaptureProcess(self):
     if self.validInputData():
-      self.setTestExecutionData()
-      testData = self.getMetadata()
-      self.evidence = Evidence(self.dirPathText.get(),self.replacementText.get(),testData,self.descriptionText.get())
-      cap = captureWindow(self.root,self.evidence,self.dirPathText,self.replacementText,self.descriptionText) 
-      if cap != None:
-        self.weStart = True
+      res = boxmessage.askquestion("New Evidence","¿Do you want to create a new test case evidence?")
+      if res == "yes":
+        self.setTestExecutionData()
+        testData = self.getMetadata()
+        self.evidence = Evidence(self.dirPathText.get(),self.replacementText.get(),testData,self.descriptionText.get())
+        cap = captureWindow(self.root,self.evidence,self.dirPathText,self.replacementText,self.descriptionText) 
+        if cap != None:
+          self.weStart = True
     else:
       boxmessage.showerror("Input Data","The filename or Directory is not valid to store the evidence")
 
@@ -126,8 +146,11 @@ class mainWindow():
       result = messagebox.askquestion("Generate Doc","¿You are sure to generate the document?")
       if result == "yes":
         self.evidence.closeDocument()
-        messagebox.showinfo("Generate Doc","Document as been created successfuylly")
+        messagebox.showinfo("Generate Doc","Document as been created successfully")
         self.openWorkingDirectory()
+        self.replacementText.set("")
+        self.dirPathText.set("")
+        self.descriptionText.set("")
     else:
       boxmessage.showerror("We don´t start","First you must click Start button to capture the evidences")
 

@@ -1,10 +1,11 @@
 from dependecies import *
 import os
+from tkinter import Menu
 
 def setWindow(root,title,width,height,position):
 
   root.title(title)
- # get the screen dimension
+   # get the screen dimension
   screen_width = root.winfo_screenwidth()
   screen_height = root.winfo_screenheight()
   
@@ -28,3 +29,4 @@ def setWindow(root,title,width,height,position):
   except tk.TclError as e:
     print(e)
     pass
+
