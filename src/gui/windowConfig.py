@@ -18,7 +18,7 @@ def setWindow(root,title,width,height,position):
     root.geometry(f'{width}x{height}+{center_x}+{center_y}')
   else:
     root.geometry(f'{width}x{height}+{screen_width-(width+30)}+{screen_height-(height+90)}') 
-  
+    root.attributes("-topmost",True)
   root.resizable(False,False)
   root.columnconfigure(0, weight=4)
   root.columnconfigure(1, weight=1)

@@ -11,10 +11,6 @@ class captureWindow():
       self.testDescription = testDescription.get()
       self.secondary_window = tk.Toplevel(root)
       self.root = root
-      ##Window Attributes
-      # self.secondary_window.attributes("-topmost",True)
-      # self.secondary_window.attributes("-toolwindow",True)     
-      # self.secondary_window.attributes("-topmost",False)
       setWindow(self.secondary_window,"Capture",370,70,"BOTTOM-LEFT")
       self.secondary_window.protocol("WM_DELETE_WINDOW",lambda:self.checkCloseOption())
       self.root.iconify()
