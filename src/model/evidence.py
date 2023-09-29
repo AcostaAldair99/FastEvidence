@@ -8,8 +8,6 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from PIL import ImageGrab
 import datetime
 import os
-import random
-
 
 class Evidence:
 
@@ -21,10 +19,9 @@ class Evidence:
       self.executionDate = datetime.datetime.today().strftime("%d-%m-%Y")
       self.clockTime = datetime.datetime.now().strftime("%H:%M:%S")
       self.description = description
-      self.dir = self.path +"/"+ str(random.randint(1,200))
+      self.dir = self.path +"/"+ self.filename#str(random.randint(1,200))
       self.picture_dir = self.dir + "/pictures" 
       self.pictures_num = 0    
-
 
     def toString(self):
       print("Path: "+self.path)
@@ -33,15 +30,19 @@ class Evidence:
 
 
     def createDirectories(self):
-      os.mkdir(self.dir)      
-      os.mkdir(self.picture_dir)
-   
+      if os.path.exists(self.dir):
+        return True
+      else:
+        os.mkdir(self.dir)      
+        os.mkdir(self.picture_dir)
+        return False
+    
+
     def closeDocument(self):
       dir = str(self.dir+"/"+self.filename+".docx")
       self.doc.save(dir)
 
     def createDocument(self):
-      self.createDirectories()
       self.doc = Document()
       self.setHeader()
       self.settingTable()

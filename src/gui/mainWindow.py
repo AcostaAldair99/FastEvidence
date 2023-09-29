@@ -8,7 +8,9 @@ class mainWindow():
     self.root = root
     self.evidence = ""
     self.weStart = False
-    setWindow(self.root,"Fast Evidence",400,180,"CENTER")
+    setWindow(self.root,"Fast Evidence",400,170,"CENTER")
+
+    self.menuBar= Menu(self.root)
     self.file = Menu(self.menuBar,tearoff = 0)
     self.menuBar.add_cascade(label ='File', menu = self.file)
     self.file.add_command(label ='New Evidence', command = None)
@@ -16,7 +18,6 @@ class mainWindow():
     self.file.add_command(label ='Reset',command=lambda:self.resetEvidence())
     self.file.add_separator()
     self.file.add_command(label ='Exit', command = lambda:self.askCloseProgram())
-    self.file.config(cursor="hand2")
 
     self.settings = Menu(self.menuBar,tearoff=0)
     self.menuBar.add_cascade(label="Settings",menu=self.settings)
@@ -50,7 +51,7 @@ class mainWindow():
     self.replacement = ttk.Entry(self.mainFrame, width=30,textvariable=self.replacementText)
     self.replacement.grid(column=1, row=1)
 
-    #FilenameEntry
+    #Test Case Description
     ttk.Label(self.mainFrame, text='Description:',anchor='w').grid(column=0, row=2,sticky='w') 
     self.descriptionText = tk.StringVar()
     self.description= ttk.Entry(self.mainFrame, width=30,textvariable=self.descriptionText)
@@ -91,12 +92,16 @@ class mainWindow():
           self.setTestExecutionData()
           testData = self.getMetadata()
           self.evidence = Evidence(self.dirPathText.get(),self.replacementText.get(),testData,self.descriptionText.get())
-          cap = captureWindow(self.root,self.evidence,self.dirPathText,self.replacementText,self.descriptionText) 
-          if cap != None:
-            self.weStart = True
-          self.buttonStart.config(text="Continue")
-      else:
-        boxmessage.showerror("Input Data","The filename or Directory is not valid to store the evidence")
+          res = self.evidence.createDirectories()
+          if not res:
+            cap = captureWindow(self.root,self.evidence,self.dirPathText,self.replacementText,self.descriptionText) 
+            if cap != None:
+              self.weStart = True
+          else:
+            boxmessage.showerror("Dir Duplicate","The name of the filename it occupy already")
+            self.resetEvidence()
+        else:
+          boxmessage.showerror("Input Data","The filename or Directory is not valid to store the evidence")
     else:
         boxmessage.showerror("Start Error","You have already a evidence in process, to start again press RESET")
 
