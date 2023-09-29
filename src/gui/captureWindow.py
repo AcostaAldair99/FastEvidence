@@ -1,4 +1,5 @@
 from dependecies import *
+import time
 
 class captureWindow():
     
@@ -51,6 +52,8 @@ class captureWindow():
         command=lambda:self.checkCloseOption()
       )
       self.buttonCancel.grid(column=3,row=0,padx=5)
+
+
     def toString(self):
        print("dir: "+ self.dirEvidence)
        print("file: "+self.filename)
@@ -58,11 +61,16 @@ class captureWindow():
 
 
     def addStep(self):
+      self.secondary_window.iconify() 
+      time.sleep(1)
       self.evidence.addPicture("Step # "+self.stepsText.get()+": "+self.descriptionText.get())
       self.descriptionText.set(" ") 
       current = int(self.stepsText.get())
       new_step = current + 1
       self.stepsText.set(str(new_step))
+#      self.secondary_window.after(2000,self.secondary_window.deiconify)
+      self.secondary_window.deiconify()
+
 
     def disableEvent(self):
        pass
